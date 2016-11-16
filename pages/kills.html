@@ -1,0 +1,246 @@
+<head>
+	<script src="nui://game/ui/jquery.js" type="text/javascript"></script>
+	<style>
+		@import url(https://fonts.googleapis.com/css?family=Roboto);
+	
+		.kill {
+			font-family: 'Roboto';
+			font-weight: bold;
+			margin-right: 10px;
+			margin-top: 100px;
+		}
+		
+		.killer {
+		
+			color: red;
+			float: left;
+		}
+		
+		.killer_weapon {
+			color: orange;
+			float: left;
+			margin-left: 10px;
+			margin-right: 10px;
+		}
+		
+		.person_who_died {
+			color: green;
+			float: left;
+		}
+
+		body {
+			background-color: RGBA(0,0,0,0);
+			padding:0;
+			margin:0;
+		}
+
+		#playerlist {
+			margin-top:25px;
+			visibility:hidden;
+			font-family: 'Roboto';
+			color:white;
+			position:relative;
+			min-width:50%;
+			width: auto;
+			margin-left:auto;
+			margin-right:auto;
+			height:auto;
+			padding: 20px;
+			font-weight: normal;
+		}
+
+		#playerlist .titles {
+			background-color: rgba(10,10,10,0.8);
+			margin-bottom:2px;
+			font-weight: normal;
+		}
+
+		#playerlist .player {
+			font-weight: normal;
+			background-color: rgba(50,50,50,0.75);
+		}
+		#playerlist  .name {
+			text-align:left;
+			font-weight: normal;
+		}
+		#playerlist .player .name {
+			 font-family: 'Roboto';
+			font-size: 90%;
+			padding-top:5px;
+			padding-bottom:5px;
+			font-weight: normal;
+		}
+		#playerlist .id {
+			width:15px;
+			font-weight: normal;
+		}
+		#playerlist .player .id {
+			 font-family: 'Roboto';
+			font-size: 90%;
+			padding-top:5px;
+			padding-bottom:5px;
+			font-weight: normal;
+		}
+
+				#playerlist2 {
+			margin-top:25px;
+			visibility:hidden;
+			font-family: 'Roboto';
+			color:white;
+			position:relative;
+			min-width:50%;
+			width: auto;
+			margin-left:auto;
+			margin-right:auto;
+			height:auto;
+			padding: 20px;
+			font-weight: normal;
+		}
+
+		#playerlist2 .titles {
+			background-color: rgba(10,10,10,0.8);
+			margin-bottom:2px;
+			font-weight: normal;
+		}
+
+		#playerlist2 .player {
+			font-weight: normal;
+			background-color: rgba(50,50,50,0.75);
+		}
+		#playerlist2  .name {
+			text-align:left;
+			font-weight: normal;
+		}
+		#playerlist2 .player .name {
+			 font-family: 'Roboto';
+			font-size: 90%;
+			padding-top:5px;
+			padding-bottom:5px;
+			font-weight: normal;
+		}
+		#playerlist2 .id {
+			width:15px;
+			font-weight: normal;
+		}
+		#playerlist2 .player .id {
+			 font-family: 'Roboto';
+			font-size: 90%;
+			font-weight: normal;
+			padding-top:5px;
+			padding-bottom:5px;
+		}
+		
+        /* Actual code */
+		#kills {
+			margin-top: 50px;
+		}
+		
+        .Killfeed {
+            margin-top:8px;
+            padding:2px 10px;
+            font-family:'Roboto', sans-serif;
+            font-size:24px;
+            text-shadow: 1px 1px 1px rgba(0,0,0,0.75);
+            color:white;
+            background: linear-gradient(to left, rgba(25,25,25,0.5) 0%,rgba(25,25,25,0.3) 52%,rgba(25,25,25,0) 100%);
+        }
+        .Killfeed .Friendly {
+            color:green;
+        }
+		.Killfeed .Enemy {
+			color: red;
+		}
+		
+		.sameline {
+			float: left;
+		}
+		
+		#weapon{
+			margin-left: 5px;
+			margin-right: 5px;
+		}
+	</style>
+	
+	<script>
+		$(function(){
+			function AddKillFeed(Killer,KillerTeam,Gun,Killed,KilledTeam) {
+				var El = $('<div class="Killfeed"><span class="'+(KillerTeam ? "Friendly" : "Enemy")+'">'+Killer+'</span> <span id="weapon" class="">['+Gun+']</span> <span class="'+(KilledTeam ? "Friendly" : "Enemy")+'">'+Killed+'</span></div>')
+				$("#kills").append(El)
+	 
+				setTimeout(function(){
+					El.fadeOut(4000,function(){
+						$(this).remove();
+					});
+				},2000)
+			}
+			window.addEventListener('message', function(event){
+				var item = event.data;
+				if(item.meta != undefined)
+					return;
+				if(item.weapon == "Suicide")
+					item.killed = "";
+	 
+				AddKillFeed(item.killer,item.friendlyK,item.weapon,item.killed,item.friendlyKI)
+			})
+		})
+	</script>
+</head>
+
+<body>
+	<div style="position: absolute; top: 0; right: 0;" id="kills">
+	</div>
+	
+		<center id="displayPlayerlist">
+			<div>
+				<div id="playerlistTitleAlpha" style="font-family: 'Roboto'; padding-top: 3px; padding-bottom: 3px; margin-top:55px; color: white; width: 20%;">Team Alpha</div>
+				<table id="playerlist" style="margin-top: -20px" cellspacing="0" cellpadding="10">
+				</table>
+			</div>
+			
+			
+			<div>
+				<div id="playerlistTitleBeta" style="font-family: 'Roboto'; padding-top: 3px; padding-bottom: 3px;  margin-top:25px; color: white; width: 20%;">Team Beta</div>
+				<table id="playerlist2" style="margin-top: -20px" cellspacing="0" cellpadding="10">
+				</table>
+			</div>
+		<center>
+		
+		<script>
+			document.getElementById("displayPlayerlist").style.visibility = "hidden";
+			
+			window.addEventListener('message', function(event)
+			{
+				var item = event.data;
+
+				if (item.meta && item.meta == 'open')
+				{
+					document.getElementById("displayPlayerlist").style.visibility = "visible";
+					document.getElementById("playerlist").style.visibility = "visible";
+					document.getElementById("playerlist").innerHTML = item.players
+					document.getElementById("playerlist2").style.visibility = "visible";
+					document.getElementById("playerlist2").innerHTML = item.players2
+					
+					if(item.team == "alpha"){
+						$("#playerlistTitleAlpha").css("background", "rgba(0, 100, 0, 0.6)")
+						$("#playerlistTitleBeta").css("background", "rgba(100, 0, 0, 0.6)")
+					}else{
+						$("#playerlistTitleAlpha").css("background", "rgba(100, 0, 0, 0.6)")
+						$("#playerlistTitleBeta").css("background", "rgba(0, 100, 0, 0.6)")
+					}
+					
+					return;
+				}
+				if (item.meta && item.meta == 'close')
+				{
+					 document.getElementById("displayPlayerlist").style.visibility = "hidden";
+					 document.getElementById("playerlist").style.visibility = "hidden";
+					 document.getElementById("playerlist").innerHTML = ''
+					 document.getElementById("playerlist2").style.visibility = "hidden";
+					 document.getElementById("playerlist2").innerHTML = ''
+					
+					return;
+				}
+				
+			}, false);
+		</script>
+</body>
